@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/context
+                    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                    http://www.springframework.org/schema/mvc
+                    http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+	<!-- 指定控制器类的基本包 -->
+	<!-- 注册用于支持基于注解的控制器的请求和处理方法的Bean对象 -->
+	<context:component-scan base-package="com.outlook.sftjun.controller" />
+	<!-- 访问静态资源 ,要使用这个元素，则引入mvc:annotation-driven这个元素 -->
+	<mvc:annotation-driven />
+	<mvc:resources location="/img/" mapping="/img/**" />
+	<mvc:resources location="/css/" mapping="/css/**" />
+	<mvc:resources location="/js/" mapping="/js/**" />
+	<mvc:resources location="/404.html" mapping="/404.html"/>
+	<mvc:resources location="/405.html" mapping="/405.html"/>
+	<!-- 配置静态资源的路径和类型 -->
+	<!-- mvc:default-servlet-handler/ -->
+	<!-- org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler -->
+	<!-- 配置视图解析器 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 加入视图的解析实现类 -->
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<!-- 加入页面的响应头重发字符编码 -->
+		<property name="contentType" value="text/html; charset=utf-8" />
+		<!-- 前缀 -->
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<!-- 后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- max file upload size 50M 50*1024*1024 -->
+		<property name="maxUploadSize" value="52428800"></property>
+		<property name="defaultEncoding" value="utf-8"></property>
+	</bean>
+</beans>

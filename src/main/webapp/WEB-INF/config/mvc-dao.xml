@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+	<!-- 引入属性文件jdbc.properties -->
+	<context:property-placeholder location="/WEB-INF/config/jdbc.properties" />
+	<!-- 定义数据源dataSource -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close" p:driverClassName="${jdbc.driverClassName}"
+		p:url="${jdbc.url}" p:username="${jdbc.username}" p:password="${jdbc.password}"></bean>
+	<!-- 定义Hibernate的Session工厂 并引入Hibernate的配置文件 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		p:dataSource-ref="dataSource" p:configLocation="/WEB-INF/config/hibernate.cfg.xml">
+		<property name="packagesToScan">
+			<list>
+				<value>com.outlook.sftjun.domain</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 定义Hibernate模板 -->
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate"
+		p:sessionFactory-ref="sessionFactory"></bean>
+	<!-- 配置Hibernate事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory"></bean>
+	<!-- service层只有实现类没有接口，则需要加上 proxy-target-class="true"-->
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+</beans>

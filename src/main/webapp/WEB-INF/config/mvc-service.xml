@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+	<!-- 引入sessionFactory -->
+	<import resource="mvc-dao.xml" />
+	<!-- 扫描com.outlook.sftjun.*下面标有＠serviece的组件 -->
+	<context:component-scan base-package="com.outlook.sftjun.service"></context:component-scan>
+	<!-- 事务控制位置，一般在业务层service -->
+	<aop:config>
+		<!-- 事务增强切面 -->
+		<aop:pointcut expression="execution(* com.outlook.sftjun..*.*(..))"
+			id="txPointcut" />
+		<!-- 引用事务增强 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />
+	</aop:config>
+	<!-- 事务增强 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 事务属性定义 -->
+			<tx:method name="get*" read-only="false" propagation="NOT_SUPPORTED" />
+			<tx:method name="find*" read-only="false" propagation="NOT_SUPPORTED" />
+			<!-- 需要配置好save update delete等的事务属性，否则上面两个配置不起作用 -->
+			<tx:method name="save*" propagation="REQUIRED"
+				rollback-for="Exception" />
+			<tx:method name="update*" propagation="REQUIRED"
+				rollback-for="Exception" />
+			<tx:method name="delete*" propagation="REQUIRED"
+				rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 把默认为针对接口的AOP就变成了针对类的 -->
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+</beans>

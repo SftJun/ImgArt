@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1" metadata-complete="true">
+	<display-name />
+	<!-- **********************Spring MVC************************ -->
+	<!-- 业务层和持久层的Spring配置文件，以供Web子Spring容器所使用 -->
+	<!-- Web层Spring容器将作为业务层Spring容器的子容器，Web层可以访问业务层容器的Bean，而业务层容器访问不到Web层容器的Bean -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/config/applicationContext.xml</param-value>
+	</context-param>
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/config/log4j.properties</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<!-- 声明 DispatcherServlet -->
+	<!-- 用于启动Web层的Spring容器 -->
+	<!-- 注：可以配置多个DispatcherServlet，再通过servlet-mapping配置，每个DispatcherServlet就可处理不同的请求 -->
+	<servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/springmvc-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<!-- 过滤器，解决中文乱码问题 -->
+	<filter>
+		<filter-name>CharacterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>  
+	<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>  
+	</filter-mapping>
+	<!-- DispatcherServlet匹配的URL模式 -->
+	<!-- 所有以.jsp结尾的HTTP请求都会被DispatcherServlet截获并处理 -->
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	    <error-page>
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/405.html</location>
+    </error-page>
+</web-app>
