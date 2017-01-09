@@ -1,7 +1,14 @@
 package com.outlook.sftjun.controller;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.alibaba.fastjson.JSON;
+import com.outlook.sftjun.config.AppString;
 import com.outlook.sftjun.domain.User;
+import com.outlook.sftjun.domain.UserProperties;
 import com.outlook.sftjun.service.UserService;
 import com.outlook.sftjun.tools.EncryptionTools;
 import com.outlook.sftjun.tools.Json2Obj;
@@ -18,8 +27,10 @@ import com.outlook.sftjun.tools.U8JsonDecoder;
 
 @Controller
 @RequestMapping("/user") // 正理来自/userURI的请求
-@SessionAttributes("user")
+@SessionAttributes("userId")
 public class UserController extends BaseController {
+	
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserService userService;
@@ -84,8 +95,33 @@ public class UserController extends BaseController {
 		}
 	}
 	
-	@RequestMapping(value="register")
-	public String registerUser(){
+	/**
+	 * 请求注册页面
+	 * @return
+	 */
+	@RequestMapping(value="register",method=RequestMethod.GET)
+	public String registerUserGet(){
+		log.info("调用注册页面");
 		return "/user/register";
+	}
+	
+	/**
+	 * 提交注册信息
+	 * @param model
+	 * @param httpServletRequest
+	 */
+	@RequestMapping(value="register",method=RequestMethod.POST)
+	public void registerUserPost(Model model,HttpServletRequest httpServletRequest){
+		User user = new User();
+		Map<String, String[]> parameterMap = httpServletRequest.getParameterMap();
+		user.setUserName(parameterMap.get(UserProperties.USERNAME)[0]);
+		user.setPassword(parameterMap.get(UserProperties.PASSWORD)[0]);
+		user.setAge(Integer.parseInt(parameterMap.get(UserProperties.AGE)[0]));
+		user.setGender(parameterMap.get(UserProperties.GENDER)[0]);
+		user.setTel(parameterMap.get(UserProperties.TEL)[0]);
+		userService.saveUser(user);
+		log.info("用户注册成功");
+		model.addAttribute(AppString.SESSION_USER_ID, 
+				userService.findUserByName(user.getUserName()));
 	}
 }
