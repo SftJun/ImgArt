@@ -21,4 +21,9 @@ public class ImgService extends BaseService<Img>{
 		return null;
 	}
 
+	public void save(Img img) {
+		// TODO Auto-generated method stub
+		imgDao.save(img);
+	}
+
 }

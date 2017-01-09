@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
@@ -30,6 +32,8 @@ import com.outlook.sftjun.tools.PicTypes;
 @Import(PropertyPlaceholderConfig.class)
 @SessionAttributes("user")
 public class ImgController extends BaseController {
+	
+	private static final Logger log = LoggerFactory.getLogger(ImgController.class);
 
 	@Autowired
 	private ImgService imgService;
@@ -39,6 +43,7 @@ public class ImgController extends BaseController {
 
 	@RequestMapping(value = "upload", method = RequestMethod.GET)
 	public String upLoad() {
+		log.info("图片上传的Get请求");
 		return "/imgs/upload";
 	}
 
@@ -52,22 +57,22 @@ public class ImgController extends BaseController {
 	@RequestMapping(value = "upload", method = RequestMethod.POST)
 	public void upload(@RequestParam("files") CommonsMultipartFile[] files, HttpServletRequest request,
 			HttpServletResponse response) {
-		User user = new User();
+		log.info("图片上传的POST请求");
 		//
 		Map<String,String[]> parameterMap = request.getParameterMap();
-		String location = parameterMap.get("location")[0];
-		String shortInfo = parameterMap.get("shortInfo")[0];
+		String location = new StringBuilder(parameterMap.get("location")[0]).toString();
+		log.info("地址是:"+location);
+		String shortInfo = new StringBuilder(parameterMap.get("shortInfo")[0]).toString();
+		log.info("简介是:"+shortInfo);
 		//
-		System.out.println("有多少张图片被上传:"+files.length);
 		for (CommonsMultipartFile file : files) {
 			Img img = new Img();
 			String path = null;// 文件路径
 			String type = null;// 文件类型
 			String fileName = file.getOriginalFilename();// 文件原名称
-			System.out.println("上传的文件原名称:" + fileName);
+			log.info("上传的文件原名称:" + fileName);
 			// 判断文件类型
 			type = StringUtils.substringAfterLast(fileName, ".").toUpperCase();
-			System.out.println(type);
 			PicTypes picTypes = new PicTypes();
 			if (picTypes.getPIC_TYPES().contains(type)) {
 				// 自定义的文件名称
@@ -79,20 +84,20 @@ public class ImgController extends BaseController {
 				img.setContentType(type);
 				img.setLocation(location);
 				img.setShortInfo(shortInfo);
-				img.setUser(user);//TODO
-				System.out.println(img.toString());
-				System.out.println("存放图片文件的路径:" + path);
+				img.setUser(null);//TODO
+				log.info("存放图片文件的路径:" + path);
 				try {
 					// 转存文件到指定的路径
 					file.transferTo(new File(path));
+					imgService.save(img);
 				} catch (IllegalStateException e) {
-					e.printStackTrace();
+					log.error(e.toString());
 				} catch (IOException e) {
-					e.printStackTrace();
+					log.error(e.toString());
 				}
-				System.out.println("文件成功上传到指定目录下");
+				log.info("文件成功上传到"+path);
 			} else {
-				System.out.println("不是我们想要的文件类型,请按要求重新上传");
+				log.info("不是我们想要的文件类型,请按要求重新上传");
 			}
 		}
 	}

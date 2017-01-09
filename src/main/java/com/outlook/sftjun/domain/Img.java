@@ -77,7 +77,7 @@ public class Img extends BaseDomain {
 	 * 用户
 	 */
 	@ManyToOne
-	@JoinColumn(name = "USER_ID", nullable = false)
+	@JoinColumn(name = "USER_ID", nullable = true)//TODO 此处仅用于测试
 	private User user;
 
 	public String getId() {
