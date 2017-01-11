@@ -16,17 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.outlook.sftjun.config.AppString;
 import com.outlook.sftjun.config.PropertyPlaceholderConfig;
 import com.outlook.sftjun.domain.Img;
-import com.outlook.sftjun.domain.User;
 import com.outlook.sftjun.service.ImgService;
 import com.outlook.sftjun.tools.PicTypes;
 
@@ -47,11 +45,11 @@ public class ImgController extends BaseController {
 	@RequestMapping(value = "upload", method = RequestMethod.GET)
 	public String upLoad(HttpSession httpSession) {
 		log.info("图片上传的Get请求");
-		Object sessionObj = httpSession.getAttribute("userId");
+		Object sessionObj = httpSession.getAttribute(AppString.SESSION_USER_ID);
 		if (sessionObj == null || sessionObj.toString().equals("")) {
 			log.info("没有\"userId\"对应的Session");
 		} else {
-			log.info(httpSession.getAttribute("userId").toString());
+			log.info(httpSession.getAttribute(AppString.SESSION_USER_ID).toString());
 		}
 		return "/imgs/upload";
 	}
