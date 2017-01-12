@@ -27,7 +27,7 @@ import com.outlook.sftjun.tools.Json2Obj;
 import com.outlook.sftjun.tools.U8JsonDecoder;
 
 @Controller
-@RequestMapping("/user") // 正理来自/userURI的请求
+@RequestMapping("/user") 
 @SessionAttributes("userID")
 public class UserController extends BaseController {
 

@@ -2,6 +2,8 @@ package com.outlook.sftjun.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,14 +21,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.alibaba.fastjson.JSON;
 import com.outlook.sftjun.config.AppString;
 import com.outlook.sftjun.config.PropertyPlaceholderConfig;
 import com.outlook.sftjun.domain.Img;
 import com.outlook.sftjun.service.ImgService;
 import com.outlook.sftjun.tools.PicTypes;
+import com.outlook.sftjun.tools.U8JsonDecoder;
 
 @Controller
 @RequestMapping(value = "/img")
@@ -86,7 +91,7 @@ public class ImgController extends BaseController {
 				String trueFileName = UUID.randomUUID().toString() + "." + type;
 				// 设置存放图片文件的路径
 				path = fileUploadDirectory + trueFileName;
-				img.setImgName(fileName);
+				img.setImgName(trueFileName);
 				img.setImgUrl(path);
 				img.setContentType(type);
 				img.setLocation(location);
@@ -107,5 +112,12 @@ public class ImgController extends BaseController {
 				log.info("不是我们想要的文件类型,请按要求重新上传");
 			}
 		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="list",produces="application/json;charset=UTF-8") //利用produces参数，设置json响应，为避免返回之后在html中乱码
+	public String listImg(){
+		List<Img> imgList = imgService.findAll();
+		return JSON.toJSONStringWithDateFormat(imgList,AppString.DATE_FORMAT);
 	}
 }

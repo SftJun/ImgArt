@@ -17,12 +17,10 @@ public class ImgService extends BaseService<Img>{
 	private ImgDao imgDao;
 	
 	public List<Img> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return imgDao.findAll(new Img());
 	}
 
 	public void save(Img img) {
-		// TODO Auto-generated method stub
 		imgDao.save(img);
 	}
 
