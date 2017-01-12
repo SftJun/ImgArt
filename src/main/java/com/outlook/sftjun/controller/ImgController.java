@@ -2,7 +2,6 @@ package com.outlook.sftjun.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,7 +30,6 @@ import com.outlook.sftjun.config.PropertyPlaceholderConfig;
 import com.outlook.sftjun.domain.Img;
 import com.outlook.sftjun.service.ImgService;
 import com.outlook.sftjun.tools.PicTypes;
-import com.outlook.sftjun.tools.U8JsonDecoder;
 
 @Controller
 @RequestMapping(value = "/img")
@@ -114,10 +112,17 @@ public class ImgController extends BaseController {
 		}
 	}
 	
-	@ResponseBody
-	@RequestMapping(value="list",produces="application/json;charset=UTF-8") //利用produces参数，设置json响应，为避免返回之后在html中乱码
+
+	@RequestMapping(value="list",method=RequestMethod.GET)
 	public String listImg(){
+		return "/imgs/list";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="listjson",produces="application/json;charset=UTF-8") //利用produces参数，设置json响应，为避免返回之后在html中乱码
+	public String listImgWithJson(){
 		List<Img> imgList = imgService.findAll();
+		log.info(JSON.toJSONStringWithDateFormat(imgList,AppString.DATE_FORMAT));
 		return JSON.toJSONStringWithDateFormat(imgList,AppString.DATE_FORMAT);
 	}
 }
