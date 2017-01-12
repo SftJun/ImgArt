@@ -1,7 +1,9 @@
 package com.outlook.sftjun.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -124,5 +127,23 @@ public class ImgController extends BaseController {
 		List<Img> imgList = imgService.findAll();
 		log.info(JSON.toJSONStringWithDateFormat(imgList,AppString.DATE_FORMAT));
 		return JSON.toJSONStringWithDateFormat(imgList,AppString.DATE_FORMAT);
+	}
+	
+	@RequestMapping(value="showimg/{imgid}")
+	public void showImg(
+			@PathVariable(value="imgid") String imgId,
+			HttpServletResponse httpServletResponse) throws IOException{
+		File file = imgService.findImgById(imgId);
+		if(file != null){
+			FileInputStream inputStream = new FileInputStream(file);
+			byte[] data = new byte[(int) file.length()];
+			inputStream.read(data);
+			inputStream.close();
+			httpServletResponse.setContentType("image/png");
+			OutputStream stream = httpServletResponse.getOutputStream();
+			stream.write(data);
+			stream.flush();
+			stream.close();
+		}
 	}
 }
