@@ -11,7 +11,7 @@
 	<!--移动设备优先-->
 	<title>图片上传</title>
 	<!-- Bootstrap -->
-	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="/ImgArt/css/bootstrap.min.css" rel="stylesheet">
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="/ImgArt/js/jquery-3.1.0.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -23,8 +23,8 @@
 		<![endif]-->
 </head>
 <body>
-	<h2>图片上传</h2>
 	<div class="container">
+		<h1>图片上传</h1>
 		<form action="upload" method="post" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="location">拍摄地点</label>
