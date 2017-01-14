@@ -2,7 +2,7 @@ $(document).ready(function(e) {
 	$('#listimg').click(function loadImg() {
 		var imgs = $('#imgs');
 		$.ajax({
-			url : "listjson",
+			url : "listjson/3/2",
 			dataType : 'json',
 			success : function(data) {
 				$.each(data, function(idx, item) {

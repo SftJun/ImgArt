@@ -26,8 +26,14 @@ public class ImgService extends BaseService<Img> {
 		imgDao.save(img);
 	}
 
+	/**
+	 * query img by id
+	 * 
+	 * @param imgId
+	 * @return
+	 */
 	public File findImgById(String imgId) {
-		
+
 		if (StringUtils.isEmpty(imgId)) {
 			return null;
 		}
@@ -40,5 +46,16 @@ public class ImgService extends BaseService<Img> {
 		} else {
 			return file;
 		}
+	}
+
+	/**
+	 * find Img with page
+	 * 
+	 * @param firstResult
+	 * @param maxResults
+	 * @return
+	 */
+	public List<Img> findImgForPage(final int firstResult, final int maxResults) {
+		return imgDao.findListForPage(firstResult, maxResults);
 	}
 }

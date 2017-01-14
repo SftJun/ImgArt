@@ -122,9 +122,11 @@ public class ImgController extends BaseController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="listjson",produces="application/json;charset=UTF-8") //利用produces参数，设置json响应，为避免返回之后在html中乱码
-	public String listImgWithJson(){
-		List<Img> imgList = imgService.findAll();
+	@RequestMapping(value="listjson/{offset}/{length}",produces="application/json;charset=UTF-8") //利用produces参数，设置json响应，为避免返回之后在html中乱码
+	public String listImgWithJson(
+			@PathVariable(value="offset") int offset,
+			@PathVariable(value="length") int length){
+		List<Img> imgList = imgService.findImgForPage(offset, length);
 		log.info(JSON.toJSONStringWithDateFormat(imgList,AppString.DATE_FORMAT));
 		return JSON.toJSONStringWithDateFormat(imgList,AppString.DATE_FORMAT);
 	}
