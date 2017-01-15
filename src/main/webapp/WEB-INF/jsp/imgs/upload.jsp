@@ -36,9 +36,9 @@
 			</div>
 			<div class="form-group">
 				<label for="files">图片选择</label>
-			<input type="file" id="files" name="files" multiple="multiple"/>
+				<input type="file" id="files" name="files" multiple="multiple"/>
 			</div>
-			<button type="submit" class="btn btn-default">提交</button>
+			<button type="submit" class="btn btn-primary start">提交</button>
 		</form>
 	</div>
 </body>
