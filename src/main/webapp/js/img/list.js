@@ -8,7 +8,7 @@ $(document).ready(function(e) {
 				$.each(data, function(idx, item) {
 					var firstchar = "<img src='/ImgArt/img/showimg/";
 					var imgid = item.id;
-					var lastchar = "'>";
+					var lastchar = "'/></li>";
 					imgs.append(firstchar+imgid+lastchar);
 				})
 			}
