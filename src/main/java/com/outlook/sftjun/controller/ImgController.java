@@ -148,9 +148,4 @@ public class ImgController extends BaseController {
 			stream.close();
 		}
 	}
-	
-	@RequestMapping(value="main")
-	public String main(){
-		return "/imgs/main";
-	}
 }

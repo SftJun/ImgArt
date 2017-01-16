@@ -58,10 +58,15 @@ public class UserController extends BaseController {
 		System.out.println("Ending...........");
 		return "Hello";
 	}
-
+	
+	@RequestMapping(value="login",method=RequestMethod.GET)
+	public String loginGet(){
+		return "/user/login";
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "login/{username}/{password}")
-	public String login(
+	public String loginPost(
 			ModelMap modelMap,
 			@PathVariable("username") String username, 
 			@PathVariable("password") String password) {

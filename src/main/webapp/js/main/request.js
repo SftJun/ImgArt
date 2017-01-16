@@ -1,7 +1,7 @@
 $(document).ready(function(e) {
 	var imgs = $('.carousel-inner');
 	$.ajax({
-		url : "listjson/0/5",
+		url : "/ImgArt/img/listjson/0/5",
 		dataType : 'json',
 		success : function(data) {
 			var i = 1;
